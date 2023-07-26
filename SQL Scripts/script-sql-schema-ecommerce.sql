@@ -4,13 +4,12 @@ USE ecommerce;
 
 
 -- Criar tabela cliente
-
 CREATE TABLE CUSTOMER(
 	IdClient INT AUTO_INCREMENT PRIMARY KEY,
     FirstName VARCHAR(10),
     MiddleInitName CHAR(3),
     LastName VARCHAR(20),
-    CPF CHAR(11) NOT NULL,
+    CPF CHAR(11),
     CredCard CHAR(16),
 	Street VARCHAR(60),
     HouseNumber VARCHAR(5) NOT NULL,
@@ -43,6 +42,7 @@ CREATE TABLE ORDERS(
     IdOrderClient INT,
     OrderStatus ENUM('Em processamento', 'Cancelado', 'Confirmado') DEFAULT 'Em processamento',
     OrderDescription VARCHAR(45),
+    Total INT DEFAULT 0,
     Shipping FLOAT DEFAULT 10,
     CONSTRAINT FK_ORDERS_CUSTOMER FOREIGN KEY (IdOrderClient) REFERENCES CUSTOMER(IdClient)
 ) AUTO_INCREMENT=1;
@@ -54,16 +54,41 @@ CREATE TABLE PAYMENT(
     IdPaymentOrder INT,
 	IdPayment INT PRIMARY KEY AUTO_INCREMENT,
 	TypePayment ENUM('Boleto', 'Cartão', 'PIX'),
+    Value1 INT,
     PaymentAccept BOOL DEFAULT FALSE,
+    TwoWays BOOLEAN,
     CONSTRAINT FK_PAYMENT_CUSTOMER FOREIGN KEY (IdPaymentClient) REFERENCES CUSTOMER(IdClient),
     CONSTRAINT FK_PAYMENT_ORDER FOREIGN KEY (IdPaymentOrder) REFERENCES ORDERS(IdOrder)
 ) AUTO_INCREMENT=1;
 
-ALTER TABLE PAYMENT 
-	ADD IdOrderPayment INT,
-	ADD CONSTRAINT FK_ORDERS_PAYMENT FOREIGN KEY (IdOrderPayment) REFERENCES PAYMENT(IdPayment);
-
-
+    
+-- Criar a tabela combo de pagamento, para permitir que o usuário selecione 2 formas de pagamento para o mesmo pedido
+CREATE TABLE PAYMENT_COMBO(
+	IdCombo INT PRIMARY KEY AUTO_INCREMENT,
+    IdPaymentCombo INT,
+    TypeCombo ENUM('Boleto', 'Cartão', 'PIX'),
+    Value2 INT,
+    CONSTRAINT FK_PAYMENT_COMBO FOREIGN KEY (IdPaymentCombo) REFERENCES PAYMENT(IdPayment)
+);
+    
+    
+-- Criar função para restringir apenas 2 tipos de pagamento para o mesmo pedido
+DELIMITER \\
+CREATE TRIGGER TR_CHECK_MAXIMUM_TWO_WAYS
+BEFORE  INSERT ON PAYMENT_COMBO
+FOR EACH ROW
+BEGIN
+	DECLARE count_ways INT;
+    SET count_ways = ( SELECT COUNT(*) FROM PAYMENT_COMBO
+					  WHERE IdPaymentCombo = NEW.IdPaymentCombo);
+                      
+	IF count_ways >= 2 THEN
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'O limite de tipo de pagamentos foi excedido (Máximo - 2 tipos)';
+	END IF;
+END;
+\\
+DELIMITER ;
 -- Criar tabela estoque
 CREATE TABLE STORAGES(
 	IdStorage INT AUTO_INCREMENT PRIMARY KEY,
@@ -80,6 +105,15 @@ CREATE TABLE STORAGES(
 	CNPJ CHAR(15) NOT NULL,
     CONSTRAINT UNIQUE_LEGAL_PERSON UNIQUE (CNPJ)
 ) AUTO_INCREMENT=1;
+
+-- incluindo relação da tabela cliente e pessoa jurídica.
+ALTER TABLE CUSTOMER
+	ADD IdLegalClient INT,
+    ADD CONSTRAINT FK_LEGAL_CLIENT FOREIGN KEY (IdLegalClient) REFERENCES LEGAL_PERSON(IdLegalPerson),
+    ADD CONSTRAINT LEGAL_CLIENT_SHOULDNT_HAVE_CPF CHECK(
+													(IdLegalClient IS NOT NULL AND CPF IS NULL) OR
+													(IdLegalClient IS NULL AND CPF IS NOT NULL)
+												);
 
 
 -- Criar tabela fornecedor
@@ -152,4 +186,30 @@ CREATE TABLE PRODUCT_ORDER(
     PRIMARY KEY (IdPOproduct, IdPOorder),
     CONSTRAINT FK_PO_PRODUCT FOREIGN KEY (IdPOproduct) REFERENCES PRODUCT(IdProduct),
     CONSTRAINT FK_PO_ORDER FOREIGN KEY (IdPOorder) REFERENCES ORDERS(IdOrder)
+);
+
+-- Criar função para somar o valor total do pedido
+DELIMITER \\
+CREATE TRIGGER SUM_PRODUCTS_ORDER
+AFTER INSERT ON PRODUCT_ORDER
+FOR EACH ROW
+BEGIN
+	DECLARE product_value FLOAT;
+    DECLARE item_order FLOAT;
+    SET product_value = (SELECT Price FROM PRODUCTS
+						 WHERE IdProduct = NEW.IdPOproduct);
+	UPDATE ORDERS
+	SET Total = Total + product_value
+    WHERE IdOrder = NEW.IdPOorder;
+END;
+\\
+DELIMITER ;
+
+-- Criar tabela de entrega
+CREATE TABLE DELIVERY(
+	IdDelivery INT PRIMARY KEY AUTO_INCREMENT,
+    IdDeliveryOrder INT,
+    StatusDelivery ENUM('Preparando para envio', 'Saiu para entrega', 'Entregue'),
+    TrackCode VARCHAR(25),
+    CONSTRAINT FK_DELIVERY_ORDER FOREIGN KEY (IdDeliveryOrder) REFERENCES ORDERS(IdOrder)
 );
