@@ -23,32 +23,6 @@ INSERT INTO PRODUCT(ProdName, Category, Price, ClassificationKids, Rating, Size)
              ('Fire Stick Amazon', 'Eletrônico', 312.55, false, '4', null),
              ('Guitarra Gibson Les Paul Standard 50s', 'Outros', 49024.50, false, '4', null);
              
--- DESC ORDERS;
--- IdOrderClient, OrderStatus('Em processamento', 'Cancelado', 'Confirmado'), OrderDescription, Shipping
-INSERT INTO ORDERS (IdOrderClient, OrderStatus, Shipping)
-	   VALUES(1, 'Em processamento', 20.00),
-			 (2, 'Cancelado', 15.50),
-			 (3, 'Confirmado', 25.00),
-			 (1, 'Em processamento', 18.00),
-			 (4, 'Confirmado', 12.00),
-			 (6, 'Em processamento', 30.50),
-			 (3, 'Confirmado', 22.00),
-			 (2, 'Cancelado', 10.00),
-			 (5, 'Em processamento', 24.00);
-
-
--- DESC PAYMENT;
--- IdPaymentClient, IdPaymentOrder, TypePayment('Boleto', 'Cartão', 'PIX'), PaymentAccept
-INSERT INTO PAYMENT (IdPaymentClient, IdPaymentOrder, TypePayment, PaymentAccept)
-	   VALUES(2, 2, 'Cartão', true),
-			 (3, 3, 'PIX', false),
-			 (1, 4, 'Boleto', true),
-			 (4, 5, 'PIX', true),
-			 (6, 6, 'Cartão', false),
-			 (3, 7, 'Boleto', true),
-			 (2, 8, 'PIX', true),
-			 (5, 9, 'Cartão', true);
-             
              
 -- DESC STORAGES;
 -- StorageLocation, Quantity
@@ -87,8 +61,7 @@ INSERT INTO SELLER (SellerName, IdLegalSeller, CPF, Contact, Location)
 			 ('Rafael Mendes', 6, '45678912304', '664444444', 'Rua dos Sabiás, 789'),
 			 ('João Alves', null, '98765432100', '338888888', 'Avenida das Aves, 123'),
 			 ('Maria Oliveira', null, '65498732100', '227777777', 'Rua das Palmeiras, 456');
-
-
+             
 -- DESC PRODUCT_SELLER;
 -- IdPseller, IdPproduct, ProdQuantity
 INSERT INTO PRODUCT_SELLER (IdPseller, IdPproduct, ProdQuantity)
@@ -133,14 +106,55 @@ INSERT INTO PRODUCT_STORAGE (IdPSproduct, IdPSstorage, Region)
 			 (6, 2, 'RJ'),
 			 (7, 3, 'MG');
              
+             
+-- DESC ORDERS;
+-- IdOrderClient, OrderStatus('Em processamento', 'Cancelado', 'Confirmado'), OrderDescription, Shipping
+INSERT INTO ORDERS (IdOrderClient, OrderStatus, Shipping)
+	   VALUES(1, 'Em processamento', 20.00),
+			 (2, 'Cancelado', 15.50),
+			 (3, 'Confirmado', 25.00),
+			 (1, 'Em processamento', 18.00),
+			 (4, 'Confirmado', 12.00),
+			 (6, 'Em processamento', 30.50),
+			 (3, 'Confirmado', 22.00),
+			 (2, 'Cancelado', 10.00),
+			 (5, 'Em processamento', 24.00);
+             
 
 -- DESC PRODUCT_ORDER;
 -- IdPOproduct, IdPOorder, POquantity, POstatus
 INSERT INTO PRODUCT_ORDER (IdPOproduct, IdPOorder, POquantity, POstatus)
 	   VALUES(1, 1, 10, 'Disponível'),
 			 (2, 1, 5, 'Disponível'),
-			 (3, 1, 8, 'Sem Estoque'),
+			 (3, 1, 8, 'Sem estoque'),
 			 (4, 2, 15, 'Disponível'),
-			 (5, 2, 3, 'Sem Estoque'),
-			 (6, 3, 12, 'Sem Estoque'),
-			 (7, 3, 20, 'Disponível');
+			 (5, 2, 3, 'Sem estoque'),
+			 (6, 3, 12, 'Sem estoque'),
+			 (7, 3, 1, 'Disponível'),
+             (2, 4, 1, 'Disponível'),
+             (3, 5, 1, 'Disponível'),
+             (4, 6, 2, 'Disponível'),
+             (5, 7, 1, 'Disponível'),
+             (1, 8, 3, 'Disponível'),
+             (6, 9, 20, 'Sem estoque');
+             
+-- DESC PAYMENT;
+-- IdPaymentClient, IdPaymentOrder, TypePayment('Boleto', 'Cartão', 'PIX'), PaymentAccept
+INSERT INTO PAYMENT (IdPaymentClient, IdPaymentOrder, TypePayment, TwoWays, Value1, PaymentAccept)
+	   VALUES(2, 2, 'Cartão', true, 3375.00, true),
+			 (3, 3, 'PIX', false, 4500.25, true),
+			 (1, 4, 'Boleto', true, 25.00, true),
+			 (4, 5, 'PIX', true, 1019.99, true),
+			 (6, 6, 'Cartão', false, 312.55, false),
+			 (3, 7, 'Boleto', true, 49024.50, true),
+			 (2, 8, 'PIX', false, 225.00, true),
+			 (5, 9, 'Cartão', false, 0.00, false);
+          
+-- DESC PAYMENT_COMBO 
+-- IdPaymentCombo, TypeCombo, Value2
+INSERT INTO PAYMENT_COMBO (IdPaymentCombo, TypeCombo, Value2)
+	   VALUES(2, 'Cartão', 3559.97),
+			 (2, 'PIX', 50);
+             
+             
+select * from orders;

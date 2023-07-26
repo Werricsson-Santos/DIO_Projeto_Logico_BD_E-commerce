@@ -42,7 +42,7 @@ CREATE TABLE ORDERS(
     IdOrderClient INT,
     OrderStatus ENUM('Em processamento', 'Cancelado', 'Confirmado') DEFAULT 'Em processamento',
     OrderDescription VARCHAR(45),
-    Total INT DEFAULT 0,
+    Total FLOAT DEFAULT 0.00,
     Shipping FLOAT DEFAULT 10,
     CONSTRAINT FK_ORDERS_CUSTOMER FOREIGN KEY (IdOrderClient) REFERENCES CUSTOMER(IdClient)
 ) AUTO_INCREMENT=1;
@@ -195,15 +195,19 @@ AFTER INSERT ON PRODUCT_ORDER
 FOR EACH ROW
 BEGIN
 	DECLARE product_value FLOAT;
-    DECLARE item_order FLOAT;
-    SET product_value = (SELECT Price FROM PRODUCTS
+    DECLARE total_value FLOAT;
+    SET product_value = (SELECT Price FROM PRODUCT
 						 WHERE IdProduct = NEW.IdPOproduct);
+                         
+    SET total_value = NEW.POquantity * product_value;
+    
 	UPDATE ORDERS
-	SET Total = Total + product_value
+	SET Total = Total + total_value
     WHERE IdOrder = NEW.IdPOorder;
 END;
 \\
 DELIMITER ;
+
 
 -- Criar tabela de entrega
 CREATE TABLE DELIVERY(
