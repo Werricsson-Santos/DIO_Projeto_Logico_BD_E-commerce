@@ -129,7 +129,6 @@ INSERT INTO PRODUCT_ORDER (IdPOproduct, IdPOorder, POquantity, POstatus)
 			 (3, 1, 8, 'Sem estoque'),
 			 (4, 2, 15, 'Disponível'),
 			 (5, 2, 3, 'Sem estoque'),
-			 (6, 3, 12, 'Sem estoque'),
 			 (7, 3, 1, 'Disponível'),
              (2, 4, 1, 'Disponível'),
              (3, 5, 1, 'Disponível'),
@@ -142,19 +141,21 @@ INSERT INTO PRODUCT_ORDER (IdPOproduct, IdPOorder, POquantity, POstatus)
 -- IdPaymentClient, IdPaymentOrder, TypePayment('Boleto', 'Cartão', 'PIX'), PaymentAccept
 INSERT INTO PAYMENT (IdPaymentClient, IdPaymentOrder, TypePayment, TwoWays, Value1, PaymentAccept)
 	   VALUES(2, 2, 'Cartão', true, 3375.00, true),
-			 (3, 3, 'PIX', false, 4500.25, true),
-			 (1, 4, 'Boleto', true, 25.00, true),
-			 (4, 5, 'PIX', true, 1019.99, true),
+			 (3, 3, 'Cartão', true, 29024.50, true),
+			 (1, 4, 'Boleto', true, 50.00, true),
+			 (4, 5, 'PIX', true, 2250.25, true),
 			 (6, 6, 'Cartão', false, 312.55, false),
-			 (3, 7, 'Boleto', true, 49024.50, true),
+			 (3, 7, 'Boleto', true, 319.99, true),
 			 (2, 8, 'PIX', false, 225.00, true),
 			 (5, 9, 'Cartão', false, 0.00, false);
           
 -- DESC PAYMENT_COMBO 
 -- IdPaymentCombo, TypeCombo, Value2
 INSERT INTO PAYMENT_COMBO (IdPaymentCombo, TypeCombo, Value2)
-	   VALUES(2, 'Cartão', 3559.97),
-			 (2, 'PIX', 50);
+	   VALUES(1, 'Cartão', 3959.97),
+			 (2, 'PIX', 20000.00),
+			 (3, 'Cartão', 130.94),
+             (4, 'Cartão', 2250.00),
+             (6, 'Cartão', 1000.00);
              
              
-select * from orders;

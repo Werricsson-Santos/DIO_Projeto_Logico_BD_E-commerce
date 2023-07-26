@@ -82,7 +82,7 @@ BEGIN
     SET count_ways = ( SELECT COUNT(*) FROM PAYMENT_COMBO
 					  WHERE IdPaymentCombo = NEW.IdPaymentCombo);
                       
-	IF count_ways >= 2 THEN
+	IF count_ways >= 1 THEN
 		SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'O limite de tipo de pagamentos foi excedido (Máximo - 2 tipos)';
 	END IF;
