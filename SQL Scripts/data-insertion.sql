@@ -1,4 +1,4 @@
--- Inserção de dados e queries
+-- Inserção de dados
 USE ecommerce;
 
 -- SHOW TABLES;
@@ -46,9 +46,9 @@ INSERT INTO LEGAL_PERSON (SocialName, TradeName, CNPJ)
 -- DESC SUPPLIER;
 -- SupplierName, LegalPerson, CPF, Contact, Location
 INSERT INTO SUPPLIER (SupplierName, IdLegalSupplier, CPF, Contact, Location)
-	   VALUES('João da Silva', 1, '12345678900', '119999999', 'Rua das Flores, 123'),
-			 ('Maria Souza', 2, '98765432101', '228888888', 'Avenida dos Sabiás, 456'),
-			 ('Pedro Santos', 3, '45678912300', '337777777', 'Rua das Palmeiras, 789'),
+	   VALUES('João da Silva', 1, null, '119999999', 'Rua das Flores, 123'),
+			 ('Maria Souza', 2, null, '228888888', 'Avenida dos Sabiás, 456'),
+			 ('Pedro Santos', 3, null, '337777777', 'Rua das Palmeiras, 789'),	
 			 ('Carlos Oliveira', null, '78945612300', '446666666', 'Avenida das Aves, 567'),
 			 ('Ana Lima', null, '45612378900', '555555555', 'Rua dos Pássaros, 678');
 
@@ -59,7 +59,7 @@ INSERT INTO SELLER (SellerName, IdLegalSeller, CPF, Contact, Location)
 	   VALUES('Ana Oliveira', 4, '12345678902', '446666666', 'Rua dos Pássaros, 567'),
 			 ('Carlos Lima', 5, '98765432103', '555555555', 'Avenida das Flores, 678'),
 			 ('Rafael Mendes', 6, '45678912304', '664444444', 'Rua dos Sabiás, 789'),
-			 ('João Alves', null, '98765432100', '338888888', 'Avenida das Aves, 123'),
+			 ('João da Silva', 1, '98765432100', '338888888', 'Rua das Flores, 123'),
 			 ('Maria Oliveira', null, '65498732100', '227777777', 'Rua das Palmeiras, 456');
              
 -- DESC PRODUCT_SELLER;
@@ -97,7 +97,7 @@ INSERT INTO PRODUCT_SUPPLIER (IdPSsupplier, IdPSproduct, PsQuantity)
              
 -- DESC PRODUCT_STORAGE;
 -- IdPSproduct, IdPSstorage, Region
-INSERT INTO PRODUCT_STORAGE (IdPSproduct, IdPSstorage, Region)
+INSERT INTO PRODUCT_STORAGE (IdLocalProduct, IdLocalStorage, Region)
 	   VALUES(1, 1, 'SP'),
 			 (2, 2, 'RJ'),
 			 (3, 3, 'MG'),

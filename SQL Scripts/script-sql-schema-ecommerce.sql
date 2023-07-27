@@ -168,12 +168,12 @@ CREATE TABLE PRODUCT_SUPPLIER(
 
 -- Criar tabela de relação entre produto e estoque
 CREATE TABLE PRODUCT_STORAGE(
-	IdPSproduct INT,
-    IdPSstorage INT,
+	IdLocalProduct INT,
+    IdLocalStorage INT,
     Region CHAR(2) NOT NULL,
-    PRIMARY KEY (IdPSproduct, IdPSstorage),
-    CONSTRAINT FK_LOCATION_PRODUCT FOREIGN KEY (IdPSproduct) REFERENCES PRODUCT(IdProduct),
-    CONSTRAINT FK_LOCATION_STORAGE FOREIGN KEY (IdPSstorage) REFERENCES STORAGES(IdStorage)
+    PRIMARY KEY (IdLocalProduct, IdLocalStorage),
+    CONSTRAINT FK_LOCATION_PRODUCT FOREIGN KEY (IdLocalProduct) REFERENCES PRODUCT(IdProduct),
+    CONSTRAINT FK_LOCATION_STORAGE FOREIGN KEY (IdLocalStorage) REFERENCES STORAGES(IdStorage)
 );
 
 
